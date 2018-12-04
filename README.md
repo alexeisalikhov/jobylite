@@ -1,2 +1,2 @@
 # jobylite
-A light version of Jobylon
+A light recruiting site
