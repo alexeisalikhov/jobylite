@@ -1,0 +1,86 @@
+{% extends user.is_authenticated|yesno:"base.html,base_no_nav.html" %}
+
+{% load thumbnail %}
+
+{% block chapeau %}
+<div class="container-fluid chapeau">
+  <div class="row d-flex h-100">
+    <div class="col text-sm-left text-center justify-content-center align-self-center logo">
+      {% thumbnail company.logo "140x100" crop='center' as im %}
+      <img class="rounded-circle align-middle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+      {% endthumbnail %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-7 offset-sm-1">
+    {% if user.is_authenticated %}
+    <div class="">
+      <a href="{% url 'jobs:jobcreation' company.id %}" class="btn btn-primary btn-lg" role="button">
+        <span style="font-size:smaller;">Create New Job</span>
+      </a>
+    </div>
+    </br>
+    </br>
+    {% endif %}
+    <div>
+      <h4>{{ company.name }}</h4>
+    </div>
+    <div>
+      {{ company.description|safe }}
+    </div>
+    <div>
+      Website:
+      <a href="{{ company.website }}" title="{{ company.website }}">{{ company.website }}</a>
+    </div>
+    <div>
+      E-mail:
+      {{ company.email }}
+    </div>
+    {% if user.is_authenticated %}
+  </br>
+    <div>
+      <a href="{% url 'companies:update' company.id %}" class="btn btn-secondary" role="button">Edit</a>
+      <a href="{% url 'companies:delete' company.id %}" class="btn btn-secondary" role="button">Delete</a>
+    </div>
+  </br>
+    <h5>Create a new job ad..</h5>
+<div>
+  {% lorem %}
+</div>
+  </br>
+  <div class="">
+    <a href="{% url 'jobs:jobcreation' company.id %}" class="btn btn-primary btn-lg" role="button">
+      <span style="font-size:smaller;">Create New Job</span>
+    </a>
+  </div>
+    {% endif %}
+  </br>
+  </div>
+  <div class="col-sm-3">
+    {% if object.job_set.exists %}
+      <div class="list-group">
+        {% for job in object.job_set.all %}
+        <a href="{% url 'jobs:detail' job.id %}" class="list-group-item list-group-item-secondary list-group-item-action">
+          <div class="d-flex align-items-center justify-content-between">
+            {{ job.title }}
+            {% if user.is_authenticated %}
+            <span class="badge badge-info badge-pill">{{ job.application_set.count }}</span>
+            {% else %}
+                {% if job.application_set.count <= 10 %}
+                <span class="badge badge-info badge-pill">New</span>
+                {% endif %}
+            {% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+</br></br></br></br></br>
+
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Create a new app{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-8 offset-sm-2">
+  {% if user.is_authenticated %}
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        {% if application.photo %}
+        <div class="card-header bg-dark"><img class="img-fluid" src="{{ application.photo.url }}" alt="img"></div>
+        {% endif %}
+        <div class="card-body text-center bg-secondary">
+          <div>{{ application.name }}</div>
+          <div>{{ object.job.title }}</div>
+          <div>{{ application.email }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div>{{ application.text }}</div>
+      {% if application.doc %}
+      <div>
+        <a href="{{ application.doc.url }}">Document</a>
+      </div>
+      {% endif %}
+      {% if application.cv %}
+      <div>
+        <a href="{{ application.cv.url }}">CV</a>
+      </div>
+      {% endif %}
+      </br>
+      {% comment %}
+      {{ application.cv }}
+      {{ application.doc }}
+      {% endcomment %}
+      {% if not application.is_evaluated %}
+      <form method="post">{% csrf_token %}
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Yes">
+          <label class="form-check-label" for="inlineRadio1">Yes</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="No">
+          <label class="form-check-label" for="inlineRadio2">No</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+      {% endif %}
+
+    </div>
+  </div>
+
+
+
+  {% endif %}
+  </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% crispy example_form example_form.helper %}
+
+{% block title %}Create a new app{% endblock %}
+
+{% block content %}
+
+{% crispy form %}
+  <h2>{{ view.model_name }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}

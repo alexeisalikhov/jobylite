@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Create a new app{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-8 offset-sm-2">
+    <form action="" method="post">{% csrf_token %}
+        <p>Are you sure you want to delete "{{ object }}"?</p>
+        <input type="submit" value="Confirm" />
+    </form>
+  </div>
+</div>
+{% endblock %}

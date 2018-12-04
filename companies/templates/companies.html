@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Create a new app{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="row">
+  <div class="col-sm-7 offset-sm-1">
+    <h4>Welcome to your dashboard!</h4>
+    {% lorem 2 p %}
+    <a href="{% url 'companies:companycreation' %}" class="btn btn-primary btn-block" role="button">Create New Company</a>
+  </div>
+  {% if user.company_set.exists %}
+  <div class="col-sm-3">
+    <div class="list-group">
+    {% for company in user.company_set.all %}
+        <a href="{% url 'companies:detail' company.id %}" class="list-group-item list-group-item-info list-group-item-action">{{ company.name }}</a>
+    {% endfor %}
+    {% endif %}
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="col-sm-8 offset-sm-2">
+    You have to login to view this page.
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

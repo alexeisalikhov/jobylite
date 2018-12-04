@@ -1,0 +1,91 @@
+{% extends user.is_authenticated|yesno:"base.html,base_no_nav.html" %}
+
+{% load thumbnail %}
+
+{% block chapeau %}
+<div class="container-fluid chapeau">
+  <div class="row d-flex h-100">
+    <div class="col text-sm-left text-center justify-content-center align-self-center logo">
+      <a href="{% url 'companies:detail' object.company.id %}" title="Company">
+        {% thumbnail view.object.company.logo "140x100" crop='center' as im %}
+          <img class="rounded-circle align-middle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="row">
+  <div class="col-sm-7 offset-sm-1">
+    <h4>We are looking for {{ view.object.title }}</h4>
+    <div>
+      {{ view.object.description|safe }}
+    </div>
+  </br>
+    <div>
+      <a href="{% url 'jobs:update' object.id %}" class="btn btn-secondary" role="button">Edit</a>
+      <a href="{% url 'jobs:delete' object.id %}" class="btn btn-secondary" role="button">Delete</a>
+    </div>
+{{ request.url }}
+</div>
+<div class="col-sm-3">
+  {% if object.application_set.exists %}
+  <h5>Applicants</h5>
+  <div class="list-group">
+    {% for application in object.application_set.all %}
+        {% if application.is_evaluated %}
+        <a href="{% url 'applications:detail' application.id %}" class="list-group-item disabled">
+          <div class="d-flex align-items-center justify-content-between">
+            {{ application.name }}
+            {% if application.is_candidate %}
+              <span class="badge badge-info badge-pill">Candidate</span>
+            {% endif %}
+          </div>
+        </a>
+        {% else %}
+        <a href="{% url 'applications:detail' application.id %}" class="list-group-item list-group-item-action">{{ application.name }}</a>
+        {% endif %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <h5>No applicants yet</h5>
+  {% endif %}
+</div>
+</div>
+{% else %}
+<div class="row">
+  <div class="col-sm-8 offset-sm-2">
+    <h4>We are looking for {{ view.object.title }}</h4>
+    <div>
+      {{ view.object.description|safe }}
+    </div>
+  </br>
+  </br>
+  <p>
+    Some info about the company..
+  </p>
+  <h3>{{ view.object.company.name }}</h3>
+  <div>
+    {{ view.object.company.description|safe }}
+  </div>
+  <div>
+    Check out our website:
+    <a href="{{ view.object.company.website }}" title="{{ view.object.company.website }}">
+      {{ view.object.company.website }}
+    </a>
+  </div>
+  <div>
+    <p>
+      E-mail for any questions: {{ view.object.company.email }}
+    </p>
+  </div>
+  <div>
+    <a href="{% url 'applications:applicationform' object.id %}" class="btn btn-success btn-block" role="button">Apply</a>
+  </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
